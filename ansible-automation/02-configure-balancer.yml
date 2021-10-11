@@ -1,0 +1,17 @@
+---
+  - name: "Configure loadbalancer with os_loadbalancer"
+    os_loadbalancer:
+      name: production-lb1
+      state: present
+      auth: "{{ credentials }}"
+      vip_network: "{{ external_net }}"
+      vip_address: "{{ lb_vip }}"
+      listeners:
+        - name: "webserver-lsnr-{{ app_port }}"
+          protocol: HTTP
+          protocol_port: "{{ app_port }}"
+          pool:
+            name: "webserver-pool-{{ app_port }}"
+            protocol: HTTP
+            lb_algorithm: ROUND_ROBIN
+

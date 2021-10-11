@@ -1,0 +1,11 @@
+#cloud-config
+users:
+  - name: cloud-admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHufCmzG95rJkXHZOe+7rHMaf3me7geAfdYAc2fuoKjSVoBni4aF4MYkSmb1UYyXjtQ++x2+i13+Osn9FJZmvda0maqT6DuIcpiAxldVrnNJFv5L1VFGiFDbUglThPc25Ytn7bWqg02pFJz4Nc9vN+PzVETevL8b0tMvWPQ44MRuXCCM+UaHO1mBD2pcEnpQ1R/MzYxTzzdvjP5iBn4GAp7KjUw/+FvBhlNiKsXJjQGl6MHbCZhtgsntJzl7tKGY4SgJXZaUD0TnpPeCBlEmWNUz4hAoVMfiiZA4fLAmJ7yZqwRcr4EVnqbmZC6CfIhVxb1J69UHhK62KS6513MP3v Generated-by-Nova
+packages:
+  - aide
+  - nmap
+  - socat
+  - wireshark

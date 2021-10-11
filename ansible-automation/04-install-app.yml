@@ -1,0 +1,19 @@
+---
+  - name: "Set a custom index message"
+    become: yes
+    template:
+      src: index.j2
+      dest: /var/www/html/index.html
+      mode: 0755
+      owner: apache
+      group: apache
+    notify:
+      - "Restart service"
+
+  - name: "Configure service"
+    become: yes
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+

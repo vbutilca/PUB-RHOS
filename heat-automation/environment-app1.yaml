@@ -1,0 +1,10 @@
+parameters:
+  web_image_name: rhel8-app1-web
+  db_image_name: rhel8-app1-db
+  web_instance_name: finance-web
+  db_instance_name: finance-db
+  instance_flavor: default
+  key_name: example-keypair
+  public_net: provider-datacentre
+  private_net: finance-network1
+  private_subnet: finance-subnet1

@@ -1,0 +1,38 @@
+---
+  - hosts: localhost
+    vars_files:
+      - "vars/credentials.yml"
+      - "vars/application-data.yml"
+    tasks:
+      - name: "Manage instances"
+        include_tasks: "01-manage-instances.yml"
+
+      - name: "Force Ansible to refresh inventory"
+        meta: refresh_inventory
+
+      - name: "Configure loadbalancer"
+        include_tasks: "02-configure-balancer.yml"
+
+      - name: "Check if instances are ready"
+        include_tasks: "03-check-instances.yml"
+
+  - hosts: prod
+    tasks:
+      - name: "Install application"
+        include_tasks: "04-install-app.yml"
+
+    handlers:
+      - name: "Restart service"
+        become: yes
+        service:
+          name: httpd
+          state: restarted
+
+  - hosts: localhost
+    vars_files:
+      - "vars/credentials.yml"
+      - "vars/application-data.yml"
+    tasks:
+      - name: "Manage load balancer members"
+        include_tasks: "05-manage-members.yml"
+        when: addmembers is defined

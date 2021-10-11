@@ -1,0 +1,56 @@
+# edit finance-app1.yaml with the below configs
+
+# web_server
+web_server:
+  type: OS::Nova::Server
+  properties:
+    name: { get_param: web_instance_name }
+    image: { get_param: web_image_name }
+    flavor: { get_param: instance_flavor }
+    key_name: { get_param: key_name }
+    networks:
+      - port: { get_resource: web_net_port }
+    user_data_format: RAW
+    user_data:
+      str_replace:
+        template: { get_file: /home/student/heat/webserver.sh }
+        params:
+          $web_private_ip: {get_attr: [web_net_port,fixed_ips,0,ip_address]}
+          $db_private_ip: {get_attr: [db_net_port,fixed_ips,0,ip_address]}
+          $web_public_ip: {get_attr: [web_floating_ip,floating_ip_address]}
+          $wc_notify: {get_attr: [web_wait_handle,curl_cli]}
+
+---
+# db_server
+db_server:
+  type: OS::Nova::Server
+  properties:
+    name: { get_param: db_instance_name }
+    image: { get_param: db_image_name }
+    flavor: { get_param: instance_flavor }
+    key_name: { get_param: key_name }
+    networks:
+      - port: { get_resource: web_net_port }
+    user_data_format: RAW
+    user_data:
+      str_replace:
+        template: { get_file: /home/student/heat/dbserver.sh }
+        params:
+          $db_wc_notify: {get_attr: [db_wait_handle,curl_cli]}
+
+---
+# create the environment-app1.yaml
+# cat << EOF >> environment-app1.yaml
+parameters:
+  web_image_name: rhel8-app1-web
+  db_image_name: rhel8-app1-db
+  web_instance_name: finance-web
+  db_instance_name: finance-db
+  instance_flavor: default
+  key_name: example-keypair
+  public_net: provider-datacentre
+  private_net: finance-network1
+  private_subnet: finance-subnet1
+#EOF
+
+

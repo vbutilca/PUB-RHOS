@@ -1,0 +1,16 @@
+---
+# Network for our production environment
+external_net: provider-datacentre
+internal_net: finance-network1
+internal_subnet: finance-subnet1
+
+# Application port to be used
+app_port: 80
+
+# VIP Address for our loadbalancer
+lb_vip: 172.25.250.150
+
+# Instance data
+vm_info:
+  - name: production-web1
+  - name: production-web2

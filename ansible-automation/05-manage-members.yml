@@ -1,0 +1,19 @@
+---
+  - name: "Query for instance information"
+    os_server_info:
+      auth: "{{ credentials }}"
+      server: "*production*"
+    register: result
+
+  - name: "Add members to pool"
+    os_member:
+      name: "{{ item.name }}"
+      state: present
+      auth: "{{ credentials }}"
+      pool: "webserver-pool-{{ app_port }}"
+      address: "{{ item.interface_ip }}"
+      protocol_port: "{{ app_port }}"
+    no_log: true
+    with_items:
+      - "{{ result.openstack_servers }}"
+

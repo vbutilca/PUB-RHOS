@@ -1,0 +1,16 @@
+---
+  - name: "Query instances with os_server_info"
+    os_server_info:
+      auth: "{{ credentials }}"
+      server: "*web*"
+    register: result
+
+  - name: "Wait for instances to have ssh service available"
+    wait_for:
+      port: 22
+      host: "{{ item.interface_ip }}"
+      search_regex: OpenSSH
+    delegate_to: localhost
+    no_log: true
+    with_items:
+      - "{{ result.openstack_servers }}"

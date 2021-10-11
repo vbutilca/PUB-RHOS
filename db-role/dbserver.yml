@@ -1,0 +1,13 @@
+---
+# This playbook deploys the DB stack in this site.
+- hosts: dbservers
+  tasks:
+  - name: Gathering info for dbservers
+    action: setup
+
+- name: deploy MySQL and configure the databases
+  hosts: dbservers
+  gather_facts: true
+  remote_user: root
+  roles:
+    - db

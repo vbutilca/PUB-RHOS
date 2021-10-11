@@ -1,0 +1,32 @@
+---
+  - name: "Manage instances with os_server module"
+    os_server:
+      name: "{{ item.name }}"
+      state: present
+      auth: "{{ credentials }}"
+      flavor: default
+      image: rhel8-web
+      key_name: example-keypair
+      network: "{{ internal_net }}"
+      security_groups: default
+      config_drive: yes
+      auto_ip: yes
+    with_items:
+      - "{{ vm_info }}"
+
+  - name: "Query instances with os_server_info"
+    os_server_info:
+      auth: "{{ credentials }}"
+      server: "*web*"
+    register: result
+
+  - name: "Ensure hosts file is updated"
+    lineinfile:
+      path: hosts
+      regex: "^{{ item.name }}$"
+      insertafter: "[prod]"
+      line: "{{ item.name }} ansible_host={{ item.interface_ip }}"
+    with_items:
+      - "{{ result.openstack_servers }}"
+    no_log: true
+
